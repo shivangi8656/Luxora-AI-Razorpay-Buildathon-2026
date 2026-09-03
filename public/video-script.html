@@ -2,18 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>LUXORA - 5-Minute Video Pitch & Demo Script (AI Growth & Agentic Commerce)</title>
+  <title>LUXORA - 5-Minute Master Video Pitch & Demo Script (Evaluation Bar & Failure Scenarios)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
     :root {
       --primary: #1b1c19;
       --accent: #a83900;
-      --bg: #faf8f5;
-      --border: #e2ded5;
+      --accent-light: #faf5ef;
+      --bg: #f7f5f0;
+      --border: #dcd7cc;
       --text: #222222;
       --muted: #555555;
+      --green: #1e7b48;
+      --red: #b91c1c;
+      --red-bg: #fff1f0;
+      --green-bg: #f0fdf4;
     }
 
     * {
@@ -27,30 +32,69 @@
       background: var(--bg);
       color: var(--text);
       line-height: 1.6;
-      padding: 40px 20px;
+      padding: 32px 16px;
     }
 
     .container {
-      max-width: 900px;
+      max-width: 1040px;
       margin: 0 auto;
       background: #ffffff;
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 48px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      padding: 44px;
+      box-shadow: 0 6px 30px rgba(0, 0, 0, 0.06);
+    }
+
+    .action-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-radius: 8px;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-secondary {
+      background: var(--primary);
+      color: #fff;
     }
 
     .header-banner {
       background: var(--primary);
       color: #ffffff;
-      padding: 32px;
+      padding: 36px;
       border-radius: 12px;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
     }
 
     .brand-title {
       font-family: 'Cinzel', serif;
-      font-size: 32px;
+      font-size: 34px;
       letter-spacing: 4px;
       font-weight: 700;
       color: #ffffff;
@@ -66,79 +110,176 @@
     }
 
     .doc-meta {
-      font-size: 12px;
-      color: #aaa;
-      margin-top: 4px;
+      font-size: 12.5px;
+      color: #cccccc;
+      margin-top: 6px;
     }
 
-    .objective-box {
-      background: #fdfbf7;
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--accent);
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 32px;
-    }
-
-    .objective-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 6px;
-    }
-
-    .objective-text {
-      font-size: 13.5px;
-      color: #333;
-    }
-
-    h2 {
-      font-size: 16px;
+    .section-title {
+      font-size: 15px;
+      font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 1.5px;
       color: var(--primary);
+      margin-top: 36px;
       margin-bottom: 16px;
-      border-bottom: 2px solid #eae6de;
+      border-bottom: 2px solid var(--border);
       padding-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .matrix-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 36px;
-    }
-
-    .matrix-card {
+    .eval-box {
+      background: var(--accent-light);
       border: 1px solid var(--border);
-      padding: 16px;
-      border-radius: 10px;
-      background: #faf9f6;
+      border-left: 5px solid var(--accent);
+      padding: 20px 24px;
+      border-radius: 8px;
+      margin-bottom: 28px;
     }
 
-    .matrix-pillar {
-      font-size: 12px;
-      font-weight: 700;
+    .eval-box-title {
+      font-size: 13px;
+      font-weight: 800;
       color: var(--accent);
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin-bottom: 4px;
+      margin-bottom: 12px;
     }
 
-    .matrix-desc {
-      font-size: 13px;
-      color: #444;
-      line-height: 1.4;
+    .eval-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
     }
 
-    .script-block {
+    .eval-item {
+      font-size: 12.5px;
+      color: #333;
+      line-height: 1.45;
+    }
+
+    .eval-item strong {
+      color: var(--primary);
+    }
+
+    .timeline-table {
+      width: 100%;
+      border-collapse: collapse;
       margin-bottom: 28px;
+      font-size: 13px;
+    }
+
+    .timeline-table th, .timeline-table td {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+
+    .timeline-table th {
+      background: #eeebe3;
+      color: var(--primary);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+    }
+
+    .timeline-table td.time {
+      font-weight: 700;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    /* Cards */
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .card {
       border: 1px solid var(--border);
       border-radius: 12px;
       overflow: hidden;
-      background: #fff;
+      background: #ffffff;
+    }
+
+    .card-header {
+      padding: 12px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-header-accent {
+      background: var(--accent-light);
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-header-red {
+      background: var(--red-bg);
+      color: var(--red);
+      border-bottom: 1px solid #fed7d7;
+    }
+
+    .card-header-green {
+      background: var(--green-bg);
+      color: var(--green);
+      border-bottom: 1px solid #bbf7d0;
+    }
+
+    .card-body {
+      padding: 16px 20px;
+      font-size: 13px;
+      color: #333;
+    }
+
+    .card-row {
+      margin-bottom: 10px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .card-label {
+      font-weight: 700;
+      color: var(--primary);
+      min-width: 140px;
+      flex-shrink: 0;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .card-value {
+      flex: 1;
+      line-height: 1.5;
+    }
+
+    .badge-exact {
+      display: inline-block;
+      padding: 2px 7px;
+      background: #eee8dc;
+      border: 1px solid #dcd5c7;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: #1b1c19;
+    }
+
+    /* Script block */
+    .script-block {
+      margin-bottom: 24px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #ffffff;
     }
 
     .script-header {
@@ -153,11 +294,12 @@
     }
 
     .script-cue {
-      padding: 12px 18px;
+      padding: 14px 20px;
       background: #faf8f5;
       font-size: 12.5px;
-      color: #666;
+      color: #555;
       border-bottom: 1px dashed var(--border);
+      line-height: 1.55;
     }
 
     .script-cue strong {
@@ -167,44 +309,46 @@
     }
 
     .script-dialogue {
-      padding: 16px 18px;
+      padding: 20px;
       font-size: 13.5px;
-      color: #1e1e1e;
-      line-height: 1.6;
+      color: #1a1a1a;
+      line-height: 1.7;
       white-space: pre-line;
+      background: #ffffff;
     }
 
-    .action-bar {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 24px;
-      align-items: center;
-      justify-content: flex-end;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 18px;
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+    .qa-box {
+      border: 1px solid var(--border);
       border-radius: 8px;
-      text-decoration: none;
-      cursor: pointer;
-      border: none;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+      background: #faf9f6;
     }
 
-    .btn-primary {
-      background: var(--accent);
-      color: #fff;
+    .qa-q {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 13px;
+      margin-bottom: 6px;
     }
 
-    .btn-secondary {
-      background: var(--primary);
-      color: #fff;
+    .qa-a {
+      font-size: 12.5px;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .eval-grid {
+        grid-template-columns: 1fr;
+      }
+      .card-row {
+        flex-direction: column;
+        gap: 2px;
+      }
+      .card-label {
+        min-width: unset;
+      }
     }
 
     @media print {
@@ -220,7 +364,7 @@
       .action-bar {
         display: none;
       }
-      .script-block {
+      .script-block, .card {
         break-inside: avoid;
       }
     }
@@ -231,7 +375,7 @@
 <div class="container">
   <div class="action-bar">
     <a href="/Luxora_AI_Commerce_5Min_Video_Script.pdf" download="Luxora_AI_Commerce_5Min_Video_Script.pdf" class="btn btn-secondary">
-      ⬇ Download PDF Document
+      ⬇ Download Master PDF
     </a>
     <button onclick="window.print()" class="btn btn-primary">
       🖨 Print / Save as PDF
@@ -240,161 +384,430 @@
 
   <div class="header-banner">
     <div class="brand-title">LUXORA</div>
-    <div class="subtitle">01. AI Growth & Agentic Commerce — 5-Minute Video Pitch & Demo Script</div>
-    <div class="doc-meta">Complete Presenter Dialogues, Step-by-Step UI Actions & Evaluation Bar Compliance Guide</div>
+    <div class="subtitle">AI Growth & Agentic Commerce — 5-Minute Master Video Pitch & Live Demo Script</div>
+    <div class="doc-meta">Full Evaluation Bar Alignment • Use Cases & Live Failure Scenarios • Exact UI Button Cues • Defensive Q&A</div>
   </div>
 
-  <div class="objective-box">
-    <div class="objective-title">Challenge Objective & Evaluation Criteria</div>
-    <div class="objective-text">
-      Build AI solutions that can increase merchant revenue or enable merchants to become transactable by AI buyers. Every money-related action must be <strong>Explainable</strong>, <strong>Bounded</strong>, and <strong>Gated</strong>. The solution must demonstrate an <strong>Audit Trail</strong>, at least one <strong>Failure Scenario</strong>, and <strong>Graceful Failure Handling</strong>.
-    </div>
-  </div>
-
-  <h2>Evaluation Bar Compliance Matrix</h2>
-  <div class="matrix-grid">
-    <div class="matrix-card">
-      <div class="matrix-pillar">Explainable</div>
-      <div class="matrix-desc">Merchant Copilot provides step-by-step growth forecasts, gross margin impacts, and funnel data before any money action.</div>
-    </div>
-    <div class="matrix-card">
-      <div class="matrix-pillar">Bounded</div>
-      <div class="matrix-desc">Discounts, pricing overrides, and inventory limits are bounded strictly by predefined margin guardrails.</div>
-    </div>
-    <div class="matrix-card">
-      <div class="matrix-pillar">Gated (Human-in-the-loop)</div>
-      <div class="matrix-desc">Zero autonomous live changes. AI requires human confirmation and 1-click gated deployment.</div>
-    </div>
-    <div class="matrix-card">
-      <div class="matrix-pillar">Audit Trail</div>
-      <div class="matrix-desc">Enterprise ledger logs AI proposals, merchant confirmations, coupon toggles, and Razorpay orders with immutable timestamps.</div>
-    </div>
-    <div class="matrix-card">
-      <div class="matrix-pillar">Failure Scenario</div>
-      <div class="matrix-desc">Deactivated/Expired privilege re-application and Razorpay test-mode payment gateway decline simulations.</div>
-    </div>
-    <div class="matrix-card">
-      <div class="matrix-pillar">Graceful Recovery</div>
-      <div class="matrix-desc">Zero cart loss on decline, clear non-technical explanation, safe 1-click retry without double billing.</div>
+  <!-- Evaluation Bar Box -->
+  <div class="eval-box">
+    <div class="eval-box-title">Official Hackathon Evaluation Bar Mapping</div>
+    <div class="eval-grid">
+      <div class="eval-item">
+        <strong>1. Explainable:</strong> AI shows step-by-step cart friction data, conversion predictions, and gross-margin impact before recommending actions.
+      </div>
+      <div class="eval-item">
+        <strong>2. Bounded:</strong> Spend capped at ₹50,000 and promotions clamped to 15-30% max discount to prevent runaway AI spending.
+      </div>
+      <div class="eval-item">
+        <strong>3. Gated (Human-in-the-Loop):</strong> AI cannot unilaterally push changes live. Merchant must click <span class="badge-exact">Deploy to Storefront</span>.
+      </div>
+      <div class="eval-item">
+        <strong>4. Audit Trail:</strong> Immutable Firestore ledger logs all AI prompts, merchant approvals, test payments, and failures with raw JSON inspection.
+      </div>
+      <div class="eval-item" style="grid-column: span 2;">
+        <strong>5. Failure Scenarios & Graceful Recovery:</strong> Live bank decline test (card ending 0002) with 100% cart preservation, plus expired promo code auto-fallback without user disruption.
+      </div>
     </div>
   </div>
 
-  <h2>5-Minute Step-by-Step Video Script</h2>
+  <!-- Timeline -->
+  <div class="section-title">
+    <span>5-Minute Timestamped Video Structure</span>
+    <span style="font-size: 11px; font-weight: normal; text-transform: none; color: #777;">Follow this pacing strictly</span>
+  </div>
 
+  <table class="timeline-table">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Segment</th>
+        <th>Key Actions & UI Buttons</th>
+        <th>Evaluation Bar Alignment</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="time">0:00 – 0:45</td>
+        <td><strong>Segment 1: Hook & Vision</strong></td>
+        <td>Landing page, Luxury catalog, <span class="badge-exact">BUYER / BUSINESS</span> toggle pill</td>
+        <td>Market gap, Conversational commerce & safe agentic transactions</td>
+      </tr>
+      <tr>
+        <td class="time">0:45 – 1:30</td>
+        <td><strong>Segment 2: Full-Stack Architecture</strong></td>
+        <td><span class="badge-exact">Sign In</span>, <span class="badge-exact">Google Sign In</span>, Firestore sync</td>
+        <td>Cloud Firestore, Google OAuth, Express server & dual-role switching</td>
+      </tr>
+      <tr>
+        <td class="time">1:30 – 2:30</td>
+        <td><strong>Segment 3A: Use Case 1 (Atelier Stylist)</strong></td>
+        <td><span class="badge-exact">✨ AI Stylist</span>, Black-tie gala prompt, Accessories upselling</td>
+        <td>Conversational styling, Upsell/Cross-sell agent & AOV growth</td>
+      </tr>
+      <tr>
+        <td class="time">2:30 – 3:15</td>
+        <td><strong>Segment 3B: Use Case 2 (Agentic Buyout)</strong></td>
+        <td><span class="badge-exact">Acquire Piece</span> in-chat buyout terminal, SHA-256 token</td>
+        <td>Agent-readable catalog, In-app autonomous checkout, Cryptographic safety</td>
+      </tr>
+      <tr>
+        <td class="time">3:15 – 4:00</td>
+        <td><strong>Segment 4: Use Case 3 (Merchant Growth)</strong></td>
+        <td><span class="badge-exact">AI Bot & Strategy</span>, <span class="badge-exact">Deploy to Storefront</span></td>
+        <td>Explainable reasoning, Bounded margin limits & Human Gate</td>
+      </tr>
+      <tr>
+        <td class="time">4:00 – 4:35</td>
+        <td><strong>Segment 5: Live Failure & Recovery</strong></td>
+        <td>Card ending in <span class="badge-exact">...0002</span> decline, Expired code fallback</td>
+        <td>Failure scenarios, 100% Bag Preservation, Graceful alternatives</td>
+      </tr>
+      <tr>
+        <td class="time">4:35 – 5:00</td>
+        <td><strong>Segment 6: Audit Trail & Closing</strong></td>
+        <td><span class="badge-exact">Settings & Security Audit</span>, Raw JSON inspector</td>
+        <td>Tamper-proof auditability, Firestore log inspection & final verdict</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Section A: Use Case Scenarios Deep Dive -->
+  <div class="section-title">
+    <span>Section A: Core Use Case Scenarios (Demonstrated in Video)</span>
+  </div>
+
+  <div class="card-grid">
+    <!-- Use Case 1 -->
+    <div class="card">
+      <div class="card-header card-header-accent">
+        <span>USE CASE 1: CONVERSATIONAL STYLING & UPSELL/CROSS-SELL</span>
+        <span class="badge-exact">Buyer Journey</span>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <div class="card-label">Objective:</div>
+          <div class="card-value">Provide white-glove personal styling on-demand, eliminating catalog search friction and naturally increasing Average Order Value (AOV).</div>
+        </div>
+        <div class="card-row">
+          <div class="card-label">Live Action:</div>
+          <div class="card-value">Patron clicks <span class="badge-exact">✨ AI Stylist</span> and asks: <em>"Show silk evening gowns for a black-tie gala"</em>. Multi-turn Gemini reasoning evaluates silhouette drape and formal etiquette, curating the handcrafted Noir Column Dress. It then contextually cross-sells matching Diamond Drop Earrings.</div>
+        </div>
+        <div class="card-row">
+          <div class="card-label">Value Metric:</div>
+          <div class="card-value">Transforms passive browsing into active conversational shopping with higher conversion rates and margin-friendly cross-selling.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Use Case 2 -->
+    <div class="card">
+      <div class="card-header card-header-accent">
+        <span>USE CASE 2: AUTONOMOUS AGENTIC BUYOUT PROTOCOL</span>
+        <span class="badge-exact">AI Buyer Journey</span>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <div class="card-label">Objective:</div>
+          <div class="card-value">Enable autonomous AI buyers to acquire products directly within conversation while guaranteeing strict bounded spend limits and inventory safety.</div>
+        </div>
+        <div class="card-row">
+          <div class="card-label">Live Action:</div>
+          <div class="card-value">Buyer clicks <span class="badge-exact">Acquire Piece</span> in chat. The system executes a 5-step verified handshake: 1) SKU & stock verification in Firestore, 2) Bounded spend cap check (&le; ₹50,000), 3) SHA-256 tamper-proof token minting, 4) Atelier piece reservation, and 5) Committing the verified order directly to client order ledger.</div>
+        </div>
+        <div class="card-row">
+          <div class="card-label">Value Metric:</div>
+          <div class="card-value">Zero-friction Conversational In-App Checkout. Fulfills the "transactable by AI buyers" hackathon objective with cryptographic security.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Use Case 3 -->
+    <div class="card">
+      <div class="card-header card-header-accent">
+        <span>USE CASE 3: AI GROWTH COPILOT & CAMPAIGN ORCHESTRATOR</span>
+        <span class="badge-exact">Merchant Journey</span>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <div class="card-label">Objective:</div>
+          <div class="card-value">Detect boutique revenue leaks from cart abandonment and deploy targeted recovery campaigns safely under human control.</div>
+        </div>
+        <div class="card-row">
+          <div class="card-label">Live Action:</div>
+          <div class="card-value">Merchant asks: <em>"Where are we losing revenue, and how do we fix it?"</em>. Copilot identifies 24% checkout drop-off and formulates promo <strong>FESTIVE30</strong>. Instead of auto-deploying, it presents a mandatory Human Confirmation Gate with gross margin calculations. Merchant clicks <span class="badge-exact">Deploy to Storefront</span> to push it live to the storefront marquee.</div>
+        </div>
+        <div class="card-row">
+          <div class="card-label">Value Metric:</div>
+          <div class="card-value">Proves Explainability, Bounded margin limits, and Gated execution to safeguard business profitability.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section B: Failure Scenarios Deep Dive -->
+  <div class="section-title">
+    <span>Section B: Live Failure Scenarios & Deterministic Graceful Recovery</span>
+  </div>
+
+  <div class="card-grid">
+    <!-- Failure Scenario 1 -->
+    <div class="card">
+      <div class="card-header card-header-red">
+        <span>FAILURE SCENARIO 1: PAYMENT GATEWAY DECLINE / INSUFFICIENT BALANCE</span>
+        <span class="badge-exact" style="background:#fed7d7; color:#9b2c2c;">Live Test Trigger</span>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <div class="card-label">How to Trigger:</div>
+          <div class="card-value">In the Razorpay test payment modal, enter a card number ending in <strong>"0002"</strong> (e.g. <code>4111 1111 1111 0002</code>) and click Pay.</div>
+        </div>
+        <div class="card-row">
+          <div class="card-label">System Reaction:</div>
+          <div class="card-value">The gateway intercepts the card and simulates: <em>"INSUFFICIENT_BALANCE: Your bank reported insufficient funds for this card."</em> with structured code <code>BAD_REQUEST_PAYMENT_ACCOUNT_INSUFFICIENT_BALANCE</code>.</div>
+        </div>
+        <div class="card-row">
+          <div class="card-label">Graceful Recovery:</div>
+          <div class="card-value">
+            <strong>1. 100% Bag Preservation:</strong> The shopping bag is NEVER cleared. Items, quantities, and applied privileges remain fully intact.<br>
+            <strong>2. Zero Phantom Debits:</strong> Explicit confirmation displayed that no funds were deducted.<br>
+            <strong>3. Alternative Options:</strong> Immediate split-payment recommendation, 1-click UPI QR retry, or alternative card switch.
+          </div>
+        </div>
+        <div class="card-row">
+          <div class="card-label">Audit Log Proof:</div>
+          <div class="card-value">Firestore logs event <code>[FAILURE] Razorpay Test Card Declined (Ending in 0002)</code> with full error payload.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Failure Scenario 2 -->
+    <div class="card">
+      <div class="card-header card-header-red">
+        <span>FAILURE SCENARIO 2: EXPIRED PRIVILEGE / DEACTIVATED PROMOTIONAL CODE</span>
+        <span class="badge-exact" style="background:#fed7d7; color:#9b2c2c;">Live Test Trigger</span>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <div class="card-label">How to Trigger:</div>
+          <div class="card-value">In the Bag Drawer promo code field, enter an expired campaign code like <strong>"EXPIRED20"</strong> or <strong>"SUMMER2025"</strong>.</div>
+        </div>
+        <div class="card-row">
+          <div class="card-label">System Reaction:</div>
+          <div class="card-value">Instead of failing with a hostile error screen or wiping the bag, the AI Concierge recognizes customer intent.</div>
+        </div>
+        <div class="card-row">
+          <div class="card-label">Graceful Recovery:</div>
+          <div class="card-value">
+            Displays: <em>"Graceful Recovery: 'EXPIRED20' has expired, but LUXORA AI Concierge has auto-applied active privilege 'VIPATELIER10' (10% off) for you!"</em> Cart values recalculate dynamically without blocking checkout.
+          </div>
+        </div>
+        <div class="card-row">
+          <div class="card-label">Audit Log Proof:</div>
+          <div class="card-value">Logged in customer activity session with automatic fallback application details.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Failure Scenario 3 -->
+    <div class="card">
+      <div class="card-header card-header-red">
+        <span>FAILURE SCENARIO 3: BOUNDED GUARDRAIL MARGIN BREACH</span>
+        <span class="badge-exact" style="background:#fed7d7; color:#9b2c2c;">Safety Policy Trigger</span>
+      </div>
+      <div class="card-body">
+        <div class="card-row">
+          <div class="card-label">How to Trigger:</div>
+          <div class="card-value">AI Copilot is asked to launch an aggressive promotion exceeding 50% discount or an AI buyer attempts to purchase over the ₹50,000 spend cap.</div>
+        </div>
+        <div class="card-row">
+          <div class="card-label">System Reaction:</div>
+          <div class="card-value">Guardrail engine triggers HTTP 422 <code>BOUNDED_LIMIT_EXCEEDED</code> to protect merchant gross margins.</div>
+        </div>
+        <div class="card-row">
+          <div class="card-label">Graceful Recovery:</div>
+          <div class="card-value">
+            The action is automatically held. AI provides a margin risk breakdown and routes the proposal to the Merchant Director for manual authorization.
+          </div>
+        </div>
+        <div class="card-row">
+          <div class="card-label">Audit Log Proof:</div>
+          <div class="card-value">Event <code>[GUARDRAIL] Merchant Guardrail Breach Held</code> recorded in Firestore audit ledger.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section C: Step-by-Step Spoken Script -->
+  <div class="section-title">
+    <span>Section C: Step-by-Step Spoken Script & Screen Cues</span>
+  </div>
+
+  <!-- Segment 1 -->
   <div class="script-block">
     <div class="script-header">
-      <span>Minute 0:00 – 0:45</span>
-      <span>Hook & Dual-Engine Problem Statement</span>
+      <span>0:00 – 0:45 | Segment 1</span>
+      <span>Hook, Problem & Luxury Agentic Vision</span>
     </div>
     <div class="script-cue">
-      <strong>Screen / Action:</strong> Start on the Luxora editorial landing page. Showcase the sleek dual toggle: "Buyer" vs "Business".
+      <strong>Screen / Action Cue:</strong> Start on the LUXORA luxury editorial homepage. Pan the cursor smoothly over the handcrafted Noir Column Dress and high jewelry. Point out the floating navigation pill and the central <span class="badge-exact">BUYER / BUSINESS</span> mode toggle at the top.
     </div>
     <div class="script-dialogue">
-"Hello judges! Welcome to Luxora — an end-to-end AI Growth and Agentic Commerce platform built for high-value merchants and autonomous AI buyers.
+"Hello examiners and judges! Welcome to LUXORA — the next evolution of AI Growth and Agentic Commerce.
 
-Today, e-commerce faces a two-sided challenge:
-1. Merchants struggle to spot live revenue leaks and take hours to formulate and deploy safe promotional campaigns.
-2. Autonomous AI buyers demand transactable, machine-readable stores where money-related actions are strictly explainable, bounded, and gated.
+In the luxury retail world, high-net-worth patrons demand white-glove personal styling on demand. Meanwhile, merchants face rising acquisition costs and silent cart abandonment.
 
-Luxora solves both sides through a unified dual portal: a live Buyer Storefront with Conversational Checkout, paired with an Autonomous Merchant Growth Copilot backed by enterprise audit governance. Let's see it in action!"
+LUXORA solves both challenges with an end-to-end, production-grade system: We empower buyers with an intelligent AI Atelier Stylist capable of autonomous in-chat transactions, while equipping merchants with an AI Growth Copilot where every financial action is strictly Explainable, Bounded, and Gated by human consent. Let us begin!"
     </div>
   </div>
 
+  <!-- Segment 2 -->
   <div class="script-block">
     <div class="script-header">
-      <span>Minute 0:45 – 1:45</span>
-      <span>Merchant Copilot: Natural Language & Revenue Telemetry</span>
+      <span>0:45 – 1:30 | Segment 2</span>
+      <span>Full-Stack Architecture, Firebase & Seamless Dual Modes</span>
     </div>
     <div class="script-cue">
-      <strong>Screen / Action:</strong> Click header toggle to "Business". Open Merchant Workspace AI Copilot. Click prompt: "Kaha kitna revenue loss ho rha kyu ho rha kaise theek kr sakte?"
+      <strong>Screen / Action Cue:</strong> In the top navigation bar, click <span class="badge-exact">Sign In</span>. Show the clean Auth Modal with <span class="badge-exact">Google Sign In</span> and verified email registration. Close the modal, then toggle back and forth between <span class="badge-exact">BUYER</span> and <span class="badge-exact">BUSINESS</span> to demonstrate zero-lag instant switching.
     </div>
     <div class="script-dialogue">
-"We switch directly into the Merchant Workspace. Our AI Copilot communicates fluently in English, Hindi, and Hinglish.
+"Under the hood, LUXORA is engineered as a robust full-stack application:
 
-Let's ask a candid merchant inquiry: 'Kaha kitna revenue loss ho rha kyu ho rha kaise theek kr sakte?'
+• Cloud Firestore serves as our real-time database, managing synchronized product catalogs, live customer carts, active growth campaigns, and an immutable security audit ledger.
+• For authentication, we implemented full Firebase Auth featuring 1-Click Google Sign-In and private client email verification.
+• An Express Node backend powers our server-side Gemini intelligence and Razorpay test-mode transaction tokens.
 
-Observe how the Copilot responds: It doesn't offer generic advice. It scans live funnel telemetry, isolates cart drop-offs on the Noir Column Dress, and models an exact recovery plan.
-
-This demonstrates our first core pillar: Explainability. The AI delivers clear Growth Highlights, Margin Risk analysis, and an explicit action rationale before suggesting any monetary change."
+Notice our central toggle: We can switch seamlessly between the client-facing luxury storefront and the merchant intelligence workspace with zero page reload delay!"
     </div>
   </div>
 
+  <!-- Segment 3A -->
   <div class="script-block">
     <div class="script-header">
-      <span>Minute 1:45 – 2:30</span>
-      <span>Bounded & Gated Execution (Live Storefront Sync)</span>
+      <span>1:30 – 2:30 | Segment 3A</span>
+      <span>Use Case 1: AI Atelier Stylist & Conversational Upsell/Cross-Sell</span>
     </div>
     <div class="script-cue">
-      <strong>Screen / Action:</strong> Type: "Haan coupon FESTIVE30 pe 30% off active kr do". Highlight the confirmation box, then click "Deploy to Storefront". Show the spinner turning into green "Live & Deployed".
+      <strong>Screen / Action Cue:</strong> In Buyer mode, click <span class="badge-exact">✨ AI Stylist</span> in the navbar. The luxury concierge drawer glides open. Click the quick prompt: <em>"Show silk evening gowns for a black-tie gala"</em>. Show the AI's styling notes and recommended Noir Column Dress, plus accessorizing earrings.
     </div>
     <div class="script-dialogue">
-"Now, let's examine the hackathon evaluation bar:
-• Is this action Bounded? Yes, discount rates are checked against strict gross-margin guardrails.
-• Is it Gated? Absolutely. The AI is forbidden from pushing promos live autonomously. It presents a gated confirmation panel requiring merchant sign-off.
+"Now, let us experience Use Case 1: Conversational Luxury Shopping.
 
-I say: 'Haan coupon FESTIVE30 pe 30% off active kr do'. The AI verifies the rule and prompts for approval. As I click 'Deploy to Storefront', watch the real-time sync:
-Instant visual feedback — the button transitions into a verified green 'Live & Deployed' state, and a sync alert confirms deployment across the storefront!"
+I click '✨ AI Stylist'. Our luxury concierge drawer opens. Let us give the stylist an occasion prompt: 'Show silk evening gowns for a black-tie gala'.
+
+Watch the AI response: Powered by Gemini reasoning, it does not just return static links. It analyzes evening dress codes, fabric drape, and silhouette elegance to recommend the handcrafted Noir Column Dress.
+
+Notice the intelligent Upsell & Cross-Sell: It automatically curates matching Diamond Drop Earrings to complete the black-tie ensemble, boosting merchant Average Order Value naturally through genuine styling expertise."
     </div>
   </div>
 
+  <!-- Segment 3B -->
   <div class="script-block">
     <div class="script-header">
-      <span>Minute 2:30 – 3:30</span>
-      <span>Omnichannel Verification & Conversational Checkout</span>
+      <span>2:30 – 3:15 | Segment 3B</span>
+      <span>Use Case 2: Autonomous In-Chat Buyout & SHA-256 Token</span>
     </div>
     <div class="script-cue">
-      <strong>Screen / Action:</strong> Toggle back to "Buyer" mode. Point out the top Hero Marquee showing FESTIVE30. Add an item to bag, open Bag Drawer, see FESTIVE30 auto-applied, click Proceed to Checkout.
+      <strong>Screen / Action Cue:</strong> Inside the Atelier chat drawer, click <span class="badge-exact">Acquire Piece</span> under the Noir Column Dress. The Autonomous Terminal executes 5 verification steps and mints a SHA-256 cryptographic token.
     </div>
     <div class="script-dialogue">
-"Let's verify omnichannel synchronization. We glide back to the Buyer Storefront with zero page reloads.
+"Now comes our biggest innovation — Agentic In-Chat Checkout:
 
-Look at the Hero Coupon Marquee and promotional banner: FESTIVE30 is live and streaming!
+Instead of sending the client through repetitive checkout forms, the patron can authorize an in-chat acquisition.
 
-As a buyer, I add the luxury piece to my bag and slide open the Bag Drawer. The newly deployed FESTIVE30 coupon is automatically recognized, deducting 30% from the order subtotal.
-
-When I proceed to checkout, our Conversational Checkout and Razorpay Test-Mode integration initiates, ensuring bounded tokenization and a seamless buying journey."
+I click 'Acquire Piece'. Watch our autonomous terminal execute a 5-step safety handshake:
+1. It verifies live inventory in Firestore.
+2. It checks gross-margin safety thresholds.
+3. It generates a cryptographic SHA-256 tamper-proof token.
+4. It reserves the atelier piece.
+5. And commits the verified order straight to the client ledger with complete traceability!"
     </div>
   </div>
 
+  <!-- Segment 4 -->
   <div class="script-block">
     <div class="script-header">
-      <span>Minute 3:30 – 4:15</span>
-      <span>Failure Scenarios & Deterministic Graceful Recovery</span>
+      <span>3:15 – 4:00 | Segment 4</span>
+      <span>Use Case 3: Explainable AI, Bounded Limits & Human Gate</span>
     </div>
     <div class="script-cue">
-      <strong>Screen / Action:</strong> Demo two scenarios: 1. Deactivating a coupon and seeing graceful rejection at checkout. 2. Razorpay test-mode payment gateway decline simulation.
+      <strong>Screen / Action Cue:</strong> Toggle to <span class="badge-exact">BUSINESS</span> mode. Click <span class="badge-exact">AI Bot & Strategy</span> tab. Click the question: <em>"Kaha kitna revenue loss ho rha kyu ho rha kaise theek kr sakte?"</em>. Copilot calculates loss and models FESTIVE30. Show the Human Gate. Click <span class="badge-exact">Deploy to Storefront</span> and watch it turn green with <span class="badge-exact">✓ Live & Deployed</span>.
     </div>
     <div class="script-dialogue">
-"Now to the most critical hackathon criteria: Failure Scenarios and Graceful Handling.
+"Next, let us see how LUXORA empowers merchants while meeting every hackathon safeguard:
 
-Failure Scenario 1: Deactivated or Expired Privilege.
-In Merchant AI, if we instruct 'Ye coupon deactivate kar do', the promo is instantly killed from the active registry. If a shopper attempts to apply the old code, the app does not break or crash — it delivers a polite, informative notice: 'This privilege has expired' and auto-recommends current active alternatives.
+We toggle into the 'BUSINESS' cockpit. In 'AI Bot & Strategy', we ask: 'Where are we losing revenue, and how do we fix it?'.
 
-Failure Scenario 2: Payment Gateway Decline.
-During Razorpay checkout, if a payment is declined or times out, our architecture guarantees zero cart state loss. The items remain securely locked in the bag, a human-readable failure diagnosis is displayed, and a 1-click retry is offered with zero duplicate charge risk."
+Notice how the AI is 100% Explainable: It identifies cart friction on gowns and proposes a 30% recovery campaign, explicitly calculating gross-margin impact.
+
+Crucially, notice the Gated Human-in-the-Loop protection: The AI cannot unilaterally alter the live store. It prepares the promotion, but requires human signoff.
+
+As I click 'Deploy to Storefront', the system updates Firebase and turns green with '✓ Live & Deployed'!"
     </div>
   </div>
 
+  <!-- Segment 5 -->
   <div class="script-block">
     <div class="script-header">
-      <span>Minute 4:15 – 5:00</span>
-      <span>Enterprise Audit Trail Governance & High-Impact Closing</span>
+      <span>4:00 – 4:35 | Segment 5</span>
+      <span>Live Failure Scenarios & Deterministic Graceful Recovery</span>
     </div>
     <div class="script-cue">
-      <strong>Screen / Action:</strong> Navigate to Merchant Workspace -> "Audit Governance" tab. Show logged events with timestamps and JSON payload viewer. Finish on camera or dual view.
+      <strong>Screen / Action Cue:</strong> Switch to Buyer mode. Open Bag Drawer. 1) Type <span class="badge-exact">EXPIRED20</span> in promo field to show graceful auto-upgrade. 2) Click Checkout -> Pay with Razorpay. Enter test card ending in <span class="badge-exact">0002</span> and click Pay. Red decline banner appears. Point out <strong>100% Bag Preservation</strong> and split-payment alternatives.
     </div>
     <div class="script-dialogue">
-"Finally, financial safety is impossible without total accountability. Here is our Enterprise Audit Trail.
+"Now, let us examine how LUXORA handles real-world failures gracefully:
 
-Every single action is permanently recorded:
-• The AI's proposed coupon and stock changes.
-• The merchant's cryptographic approval timestamp.
-• Razorpay test order IDs, payment statuses, and balance reconciliations.
-Merchants can inspect raw JSON payloads or export audit reports in one click.
+First, promo code failure: If a customer inputs 'EXPIRED20', our concierge does not crash. It informs them politely and auto-applies active privilege VIPATELIER10.
 
-To conclude: Luxora transforms passive digital boutiques into Autonomous, High-Converting Commerce Engines. Every dollar-related action is Explainable, Bounded, Gated by human consent, audited end-to-end, and resilient against edge-case failures. Thank you!"
+Second, payment decline failure: In our Razorpay test modal, I enter a test card ending in '0002'.
+
+Watch what happens: The gateway simulates an Insufficient Balance decline. Notice our Graceful Recovery: Zero cart loss! The client's bag and total remain 100% preserved, zero duplicate debits occur, and the system instantly provides split-payment and UPI QR alternatives."
     </div>
   </div>
+
+  <!-- Segment 6 -->
+  <div class="script-block">
+    <div class="script-header">
+      <span>4:35 – 5:00 | Segment 6</span>
+      <span>Immutable Audit Trail & Final Summary for Examiners</span>
+    </div>
+    <div class="script-cue">
+      <strong>Screen / Action Cue:</strong> Navigate to <span class="badge-exact">Settings & Security Audit</span> tab. Click on a log row to reveal raw JSON payload and cryptographic timestamp. Turn to camera for final concluding remarks.
+    </div>
+    <div class="script-dialogue">
+"Finally, our Audit Trail: Under 'Settings & Security Audit', every single monetary action, AI reasoning step, merchant gate approval, and payment failure is recorded in an immutable Firestore audit ledger with raw JSON inspection and 1-click export.
+
+In conclusion, LUXORA delivers on every evaluation criteria: Explainable reasoning, Bounded margin limits, Gated human authorization, Conversational AI checkout, and complete Failure Resilience.
+
+Thank you, examiners and judges — we look forward to your questions!"
+    </div>
+  </div>
+
+  <!-- Section D: Defensive Q&A -->
+  <div class="section-title">
+    <span>Section D: Defensive Q&A for Judges & Examiners</span>
+  </div>
+
+  <div class="qa-box">
+    <div class="qa-q">Q: How does LUXORA ensure the AI doesn't offer 90% discounts and bankrupt the merchant?</div>
+    <div class="qa-a">Through our Bounded Guardrail Policy. All AI proposals are clamped to a maximum 15-30% discount ceiling and checked against gross margins. Furthermore, every promotion is Gated by mandatory merchant signoff ("Deploy to Storefront") before reaching the live storefront marquee.</div>
+  </div>
+
+  <div class="qa-box">
+    <div class="qa-q">Q: What happens when a customer's card fails or payment gateway timeouts?</div>
+    <div class="qa-a">We implement Deterministic Failure Recovery: Shopping cart state is never wiped, zero ghost debits occur, the exact decline code is logged in the Audit Trail, and the user is offered 1-click retry alternatives including Split-Payment and UPI QR codes.</div>
+  </div>
+
+  <div class="qa-box">
+    <div class="qa-q">Q: How is an AI-buyer transaction authenticated without human button clicks?</div>
+    <div class="qa-a">Through our Agent Buyer Terminal protocol. The AI agent submits an acquisition request verified against active Firestore inventory, checks that the amount does not exceed the ₹50,000 spend cap, and mints an immutable SHA-256 token linked to the client's verified account.</div>
+  </div>
+
+  <div class="qa-box">
+    <div class="qa-q">Q: Where is data stored and how is the audit trail secured?</div>
+    <div class="qa-a">Data is persisted in Firebase Cloud Firestore across collections: <code>products</code>, <code>campaigns</code>, <code>orders</code>, and <code>audit_logs</code>. The audit logs contain client timestamps, IP/user tokens, action payloads, and state hashes that cannot be modified post-creation.</div>
+  </div>
+
 </div>
 
 </body>
