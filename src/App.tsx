@@ -169,6 +169,7 @@ function LuxoraApp() {
   const [giftPackaging, setGiftPackaging] = useState(true);
   const [giftMessage, setGiftMessage] = useState('');
   const [atelierPrompt, setAtelierPrompt] = useState<string | undefined>();
+  const [pendingCheckoutAfterAuth, setPendingCheckoutAfterAuth] = useState(false);
 
   // Cart Actions
   const handleAddToCart = (product: Product, size: string, colorIndex: number) => {
@@ -550,9 +551,25 @@ function LuxoraApp() {
         onUpdateQuantity={handleUpdateQuantity}
         onRemoveItem={handleRemoveFromCart}
         onAddToCart={(product, size, colorIndex) => handleAddToCart(product, size, colorIndex || 0)}
-        onProceedToCheckout={() => {
+        onProceedToCheckout={(discount, giftPkg, giftMsg) => {
+          setAppliedDiscount(discount);
+          setGiftPackaging(giftPkg);
+          setGiftMessage(giftMsg);
+          if (!user) {
+            setPendingCheckoutAfterAuth(true);
+            setAuthRole('buyer');
+            setPendingMode('buyer');
+            setIsAuthOpen(true);
+            return;
+          }
           setIsCartOpen(false);
           setIsCheckoutOpen(true);
+        }}
+        onRequireAuth={() => {
+          setPendingCheckoutAfterAuth(true);
+          setAuthRole('buyer');
+          setPendingMode('buyer');
+          setIsAuthOpen(true);
         }}
         onExploreCollection={() => {
           setIsCartOpen(false);
@@ -600,16 +617,26 @@ function LuxoraApp() {
         onClose={() => setIsCheckoutOpen(false)}
         cart={cart}
         currency={currency}
+        discountPercent={appliedDiscount}
+        giftPackaging={giftPackaging}
+        giftMessage={giftMessage}
         onClearCart={() => setCart([])}
         onOpenAuditTrail={() => setIsSettingsOpen(true)}
+        onRequireAuth={() => {
+          setPendingCheckoutAfterAuth(true);
+          setAuthRole('buyer');
+          setPendingMode('buyer');
+          setIsAuthOpen(true);
+        }}
       />
 
-      {/* Auth Modal (Supports master credential sharma.shivangiz105@gmail.com / 12345) */}
+      {/* Auth Modal (Supports master credential sharma.shivangiz105@gmail.com / Shivangi@1) */}
       <AuthModal
         isOpen={isAuthOpen}
         onClose={() => {
           setIsAuthOpen(false);
           setPendingMode(null);
+          setPendingCheckoutAfterAuth(false);
         }}
         cartItemCount={totalCartCount}
         initialRole={authRole}
@@ -617,6 +644,11 @@ function LuxoraApp() {
           const target = pendingMode || role || 'buyer';
           setPendingMode(null);
           setAppMode(target);
+          if (pendingCheckoutAfterAuth) {
+            setPendingCheckoutAfterAuth(false);
+            setIsCartOpen(false);
+            setIsCheckoutOpen(true);
+          }
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
       />

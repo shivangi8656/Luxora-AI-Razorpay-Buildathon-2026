@@ -4,12 +4,12 @@ import { getFirestore } from "firebase/firestore";
 
 // Web app's Firebase configuration provided by client
 export const firebaseConfig = {
-  apiKey: "AIzaSyDP378e-kSuMMBqacguYcI7ldmkReQW3qs",
-  authDomain: "luxora-ai-76ab7.firebaseapp.com",
-  projectId: "luxora-ai-76ab7",
-  storageBucket: "luxora-ai-76ab7.firebasestorage.app",
-  messagingSenderId: "766437284022",
-  appId: "1:766437284022:web:84f2641d6634fe1868ee17"
+  apiKey: "AIzaSyCoH60vsg3w-jtYwJ7Uz4p8Gy_LilCwpwI",
+  authDomain: "luxora-ai-bdbc2.firebaseapp.com",
+  projectId: "luxora-ai-bdbc2",
+  storageBucket: "luxora-ai-bdbc2.firebasestorage.app",
+  messagingSenderId: "928737895297",
+  appId: "1:928737895297:web:f1d6cad3d5b1197126be80"
 };
 
 // Initialize Firebase safely

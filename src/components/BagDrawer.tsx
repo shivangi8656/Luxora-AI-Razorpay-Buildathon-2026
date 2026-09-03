@@ -19,10 +19,12 @@ import {
   Bell,
   AlertCircle,
   CheckCircle2,
-  Layers
+  Layers,
+  Lock
 } from 'lucide-react';
 import { CartItem, Currency, Product } from '../types';
 import { useMerchant } from '../context/MerchantContext';
+import { useAuth } from '../context/AuthContext';
 import { PRODUCTS } from '../data/products';
 import { ExplainablePriceModal } from './ExplainablePriceModal';
 import { 
@@ -40,6 +42,7 @@ interface BagDrawerProps {
   onRemoveItem: (id: string) => void;
   onAddToCart?: (product: Product, size: string, colorIndex?: number) => void;
   onProceedToCheckout?: (appliedDiscount: number, giftPackaging: boolean, giftMessage: string) => void;
+  onRequireAuth?: () => void;
   onOpenUpsellCrossSell?: (baseProduct: Product) => void;
   onExploreCollection?: () => void;
   onSelectProduct?: (product: Product) => void;
@@ -54,10 +57,12 @@ export const BagDrawer: React.FC<BagDrawerProps> = ({
   onRemoveItem,
   onAddToCart,
   onProceedToCheckout,
+  onRequireAuth,
   onOpenUpsellCrossSell,
   onExploreCollection,
   onSelectProduct,
 }) => {
+  const { user } = useAuth();
   const { 
     catalog, 
     activeCampaigns, 
@@ -1016,17 +1021,43 @@ export const BagDrawer: React.FC<BagDrawerProps> = ({
               </div>
             </div>
 
+            {!user && (
+              <div className="p-3 bg-amber-50/90 border border-amber-200/90 rounded-xl flex items-center gap-2.5 text-amber-950 text-xs shadow-2xs">
+                <Lock className="w-4 h-4 text-[#a83900] shrink-0" />
+                <span className="text-[11px] leading-snug">
+                  <strong>Login Required:</strong> Please sign in or register to proceed to checkout.
+                </span>
+              </div>
+            )}
+
             <button
               id="checkout-drawer-btn"
               onClick={() => {
+                if (!user) {
+                  if (onRequireAuth) {
+                    onRequireAuth();
+                  } else if (onProceedToCheckout) {
+                    onProceedToCheckout(discountPercent, giftPackaging, giftMessage);
+                  }
+                  return;
+                }
                 if (onProceedToCheckout) {
                   onProceedToCheckout(discountPercent, giftPackaging, giftMessage);
                 }
               }}
               className="w-full py-3.5 bg-black hover:bg-[#474746] text-white text-[13px] uppercase tracking-widest font-bold transition-all flex items-center justify-center space-x-2 rounded-xs cursor-pointer shadow-md hover:scale-[1.01]"
             >
-              <span>Proceed to Checkout</span>
-              <ArrowRight className="w-4 h-4" />
+              {user ? (
+                <>
+                  <span>Proceed to Checkout</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              ) : (
+                <>
+                  <Lock className="w-4 h-4 text-amber-300" />
+                  <span>Sign In to Proceed to Checkout</span>
+                </>
+              )}
             </button>
           </div>
         )}

@@ -6,10 +6,10 @@ import {
   signInWithPopup, 
   signOut, 
   updateProfile,
+  sendEmailVerification,
   onAuthStateChanged 
 } from 'firebase/auth';
 import { auth, googleProvider } from '../lib/firebase';
-import { saveUserToFirestore } from '../lib/firebaseService';
 
 export interface AppUser {
   uid: string;
@@ -23,9 +23,9 @@ interface AuthContextType {
   user: AppUser | null;
   loading: boolean;
   signInWithEmail: (email: string, pass: string, role?: 'buyer' | 'merchant') => Promise<void>;
-  signUpWithEmail: (email: string, pass: string, name: string, role?: 'buyer' | 'merchant') => Promise<void>;
+  signUpWithEmail: (email: string, pass: string, name: string, role?: 'buyer' | 'merchant') => Promise<{ success: boolean; email: string }>;
+  resendVerificationEmail: (email: string, pass: string) => Promise<void>;
   signInGoogle: () => Promise<void>;
-  loginWithMasterDemo: (role?: 'buyer' | 'merchant') => void;
   logOut: () => Promise<void>;
   handleSignOut: () => Promise<void>;
   isVipClient: boolean;
@@ -33,16 +33,15 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Master credentials requested by user
+// Master credentials reference
 export const MASTER_CREDENTIALS = {
   email: 'sharma.shivangiz105@gmail.com',
-  password: '12345',
+  password: 'Shivangi@1',
   displayName: 'Shivangi Sharma',
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<AppUser | null>(() => {
-    // Check localStorage for saved session
     const saved = localStorage.getItem('luxora_auth_user');
     if (saved) {
       try {
@@ -53,21 +52,36 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     return null;
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
+        // Enforce Firebase Authentication email verification: block access if email is not verified
+        if (!currentUser.emailVerified) {
+          setUser(null);
+          localStorage.removeItem('luxora_auth_user');
+          try {
+            await signOut(auth);
+          } catch (e) {
+            // Ignore signout cleanup errors
+          }
+          setLoading(false);
+          return;
+        }
+
         const appU: AppUser = {
           uid: currentUser.uid,
           email: currentUser.email,
-          displayName: currentUser.displayName || 'Shivangi Sharma',
+          displayName: currentUser.displayName || currentUser.email?.split('@')[0] || 'Client',
           photoURL: currentUser.photoURL,
           role: 'buyer'
         };
         setUser(appU);
         localStorage.setItem('luxora_auth_user', JSON.stringify(appU));
-        saveUserToFirestore(appU);
+      } else {
+        setUser(null);
+        localStorage.removeItem('luxora_auth_user');
       }
       setLoading(false);
     });
@@ -77,92 +91,100 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signInWithEmail = async (email: string, pass: string, role: 'buyer' | 'merchant' = 'buyer') => {
     const cleanEmail = email.trim().toLowerCase();
     
-    // Check master credential match (support exact match as specified)
-    if (cleanEmail === MASTER_CREDENTIALS.email.toLowerCase() && pass === MASTER_CREDENTIALS.password) {
-      const demoUser: AppUser = {
-        uid: 'user-shivangi-master',
-        email: MASTER_CREDENTIALS.email,
-        displayName: MASTER_CREDENTIALS.displayName,
-        role: role
-      };
-      setUser(demoUser);
-      localStorage.setItem('luxora_auth_user', JSON.stringify(demoUser));
-      saveUserToFirestore(demoUser);
-      return;
-    }
-
+    let userCred;
     try {
-      const userCred = await signInWithEmailAndPassword(auth, email, pass);
-      const appU: AppUser = {
-        uid: userCred.user.uid,
-        email: userCred.user.email,
-        displayName: userCred.user.displayName || email.split('@')[0],
-        photoURL: userCred.user.photoURL,
-        role: role
-      };
-      setUser(appU);
-      localStorage.setItem('luxora_auth_user', JSON.stringify(appU));
-      saveUserToFirestore(appU);
+      userCred = await signInWithEmailAndPassword(auth, cleanEmail, pass);
     } catch (err: any) {
-      // If Firebase fails due to credential formatting or network, but it's the master email
-      if (cleanEmail === MASTER_CREDENTIALS.email.toLowerCase()) {
-        const demoUser: AppUser = {
-          uid: 'user-shivangi-master',
-          email: MASTER_CREDENTIALS.email,
-          displayName: MASTER_CREDENTIALS.displayName,
-          role: role
-        };
-        setUser(demoUser);
-        localStorage.setItem('luxora_auth_user', JSON.stringify(demoUser));
-        saveUserToFirestore(demoUser);
-        return;
+      // If master user not yet created in the project's Firebase Auth, create and send verification email
+      if (cleanEmail === MASTER_CREDENTIALS.email.toLowerCase() && 
+         (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential')) {
+        try {
+          const newCred = await createUserWithEmailAndPassword(auth, cleanEmail, pass);
+          await updateProfile(newCred.user, { displayName: MASTER_CREDENTIALS.displayName });
+          await sendEmailVerification(newCred.user);
+          await signOut(auth);
+          setUser(null);
+          localStorage.removeItem('luxora_auth_user');
+
+          const unverifiedErr: any = new Error('EMAIL_NOT_VERIFIED');
+          unverifiedErr.code = 'auth/email-not-verified';
+          unverifiedErr.email = cleanEmail;
+          throw unverifiedErr;
+        } catch (createErr: any) {
+          if (createErr.code === 'auth/email-not-verified') {
+            throw createErr;
+          }
+          throw err;
+        }
       }
       throw err;
     }
-  };
 
-  const signUpWithEmail = async (email: string, pass: string, name: string, role: 'buyer' | 'merchant' = 'buyer') => {
-    const cleanEmail = email.trim().toLowerCase();
-    
-    if (cleanEmail === MASTER_CREDENTIALS.email.toLowerCase()) {
-      const demoUser: AppUser = {
-        uid: 'user-shivangi-master',
-        email: MASTER_CREDENTIALS.email,
-        displayName: name || MASTER_CREDENTIALS.displayName,
-        role: role
-      };
-      setUser(demoUser);
-      localStorage.setItem('luxora_auth_user', JSON.stringify(demoUser));
-      saveUserToFirestore(demoUser);
-      return;
+    // Reload user record to get freshly verified status from Firebase Auth
+    await userCred.user.reload();
+
+    // If email is not verified, block access, send verification email and sign out
+    if (!userCred.user.emailVerified) {
+      try {
+        await sendEmailVerification(userCred.user);
+      } catch (sendErr) {
+        console.warn('Verification email send notice:', sendErr);
+      }
+
+      await signOut(auth);
+      setUser(null);
+      localStorage.removeItem('luxora_auth_user');
+
+      const unverifiedErr: any = new Error('EMAIL_NOT_VERIFIED');
+      unverifiedErr.code = 'auth/email-not-verified';
+      unverifiedErr.email = cleanEmail;
+      throw unverifiedErr;
     }
 
-    const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-    if (name && userCredential.user) {
-      await updateProfile(userCredential.user, { displayName: name });
-    }
+    // User is verified, grant access
     const appU: AppUser = {
-      uid: userCredential.user.uid,
-      email: userCredential.user.email,
-      displayName: name || userCredential.user.displayName,
-      photoURL: userCredential.user.photoURL,
+      uid: userCred.user.uid,
+      email: userCred.user.email,
+      displayName: userCred.user.displayName || cleanEmail.split('@')[0],
+      photoURL: userCred.user.photoURL,
       role: role
     };
     setUser(appU);
     localStorage.setItem('luxora_auth_user', JSON.stringify(appU));
-    saveUserToFirestore(appU);
   };
 
-  const loginWithMasterDemo = (role: 'buyer' | 'merchant' = 'buyer') => {
-    const demoUser: AppUser = {
-      uid: 'user-shivangi-master',
-      email: MASTER_CREDENTIALS.email,
-      displayName: MASTER_CREDENTIALS.displayName,
-      role: role
-    };
-    setUser(demoUser);
-    localStorage.setItem('luxora_auth_user', JSON.stringify(demoUser));
-    saveUserToFirestore(demoUser);
+  const signUpWithEmail = async (email: string, pass: string, name: string, role: 'buyer' | 'merchant' = 'buyer') => {
+    const cleanEmail = email.trim().toLowerCase();
+
+    // Create user in Firebase Authentication
+    const userCredential = await createUserWithEmailAndPassword(auth, cleanEmail, pass);
+    
+    if (name && userCredential.user) {
+      try {
+        await updateProfile(userCredential.user, { displayName: name });
+      } catch (e) {
+        console.warn('Profile name update warning:', e);
+      }
+    }
+
+    // Send verification email using Firebase Authentication
+    await sendEmailVerification(userCredential.user);
+
+    // Enforce: Do not sign them in automatically
+    await signOut(auth);
+    setUser(null);
+    localStorage.removeItem('luxora_auth_user');
+
+    return { success: true, email: cleanEmail };
+  };
+
+  const resendVerificationEmail = async (email: string, pass: string) => {
+    const cleanEmail = email.trim().toLowerCase();
+    const userCred = await signInWithEmailAndPassword(auth, cleanEmail, pass);
+    await sendEmailVerification(userCred.user);
+    await signOut(auth);
+    setUser(null);
+    localStorage.removeItem('luxora_auth_user');
   };
 
   const signInGoogle = async () => {
@@ -176,7 +198,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
     setUser(appU);
     localStorage.setItem('luxora_auth_user', JSON.stringify(appU));
-    saveUserToFirestore(appU);
   };
 
   const handleSignOut = async () => {
@@ -185,17 +206,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(null);
       await signOut(auth);
     } catch (e) {
-      console.warn('Sign out local reset fallback:', e);
+      console.warn('Sign out fallback:', e);
       setUser(null);
       localStorage.removeItem('luxora_auth_user');
     } finally {
-      // Force a complete clean reset of the application state to root index page
       window.location.href = '/';
     }
   };
 
   const logOut = handleSignOut;
-
   const isVipClient = Boolean(user);
 
   return (
@@ -205,8 +224,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         loading,
         signInWithEmail,
         signUpWithEmail,
+        resendVerificationEmail,
         signInGoogle,
-        loginWithMasterDemo,
         logOut,
         handleSignOut,
         isVipClient,
@@ -224,3 +243,4 @@ export const useAuth = () => {
   }
   return context;
 };
+

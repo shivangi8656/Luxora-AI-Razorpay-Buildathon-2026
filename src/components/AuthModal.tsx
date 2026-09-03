@@ -31,8 +31,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   initialRole = 'buyer',
   onLoginSuccess,
 }) => {
-  const { user, signInWithEmail, signUpWithEmail, signInGoogle, logOut } = useAuth();
+  const { user, signInWithEmail, signUpWithEmail, resendVerificationEmail, signInGoogle, logOut } = useAuth();
   const [tab, setTab] = useState<'signin' | 'signup'>('signin');
+  const [view, setView] = useState<'form' | 'verification'>('form');
+  const [verificationEmail, setVerificationEmail] = useState('');
+  const [resendStatus, setResendStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [loginRole, setLoginRole] = useState<'buyer' | 'merchant'>(initialRole);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -47,6 +50,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }
   }, [initialRole]);
 
+  useEffect(() => {
+    if (isOpen) {
+      setError(null);
+      setSuccessMsg(null);
+      setResendStatus('idle');
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -58,22 +69,34 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     try {
       if (tab === 'signin') {
         await signInWithEmail(email.trim(), password, loginRole);
+        if (onLoginSuccess) {
+          onLoginSuccess(loginRole);
+        }
+        onClose();
       } else {
         if (!name.trim()) {
-          setError('Please provide your name for client registration.');
+          setError('Please provide your name for registration.');
           setLoading(false);
           return;
         }
-        await signUpWithEmail(email.trim(), password, name.trim(), loginRole);
+        const result = await signUpWithEmail(email.trim(), password, name.trim(), loginRole);
+        
+        // Show verification screen with exact message requested
+        setVerificationEmail(result.email || email.trim());
+        setView('verification');
+        setLoading(false);
+        return;
       }
-      
-      // Immediately transition directly to the target mode with zero intermediate popup
-      if (onLoginSuccess) {
-        onLoginSuccess(loginRole);
-      }
-      onClose();
     } catch (err: any) {
       console.error('Auth error:', err);
+      if (err.code === 'auth/email-not-verified') {
+        // Block access and show verification screen
+        setVerificationEmail(err.email || email.trim());
+        setView('verification');
+        setLoading(false);
+        return;
+      }
+
       let message = 'Authentication could not be completed. Please try again.';
       if (err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
         message = 'Invalid email address or password.';
@@ -81,12 +104,35 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         message = 'An account with this email already exists. Please sign in.';
       } else if (err.code === 'auth/invalid-email') {
         message = 'Please enter a valid email address.';
+      } else if (err.code === 'auth/weak-password') {
+        message = 'Password should be at least 6 characters.';
       } else if (err.message) {
         message = err.message;
       }
       setError(message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    if (!verificationEmail) return;
+    setResendStatus('sending');
+    try {
+      if (password) {
+        await resendVerificationEmail(verificationEmail, password);
+        setResendStatus('sent');
+        setTimeout(() => setResendStatus('idle'), 6000);
+      } else {
+        setView('form');
+        setTab('signin');
+        setError('Please enter your password to resend your verification email.');
+        setResendStatus('idle');
+      }
+    } catch (err) {
+      console.warn('Resend verification warning:', err);
+      setResendStatus('sent');
+      setTimeout(() => setResendStatus('idle'), 6000);
     }
   };
 
@@ -130,8 +176,82 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           <X className="w-4 h-4" />
         </button>
 
-        {/* Direct Clean Sign In / Sign Up Form (No intermediate popup) */}
-        <div className="p-6 sm:p-8 space-y-5">
+        {view === 'verification' ? (
+          /* Firebase Email Verification Screen */
+          <div className="p-6 sm:p-8 space-y-6 text-center">
+            {/* Header Icon */}
+            <div className="mx-auto w-16 h-16 rounded-full bg-amber-50 border border-amber-200/80 flex items-center justify-center text-[#a83900] shadow-2xs relative">
+              <Mail className="w-8 h-8 text-[#a83900]" />
+              <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-black text-white flex items-center justify-center border-2 border-[#fbf9f4]">
+                <ShieldCheck className="w-3.5 h-3.5" />
+              </div>
+            </div>
+
+            {/* Verification Content with EXACT requested message */}
+            <div className="space-y-2">
+              <span className="text-[10px] uppercase tracking-[0.35em] font-semibold text-[#a83900] block">
+                LUXORA VERIFICATION
+              </span>
+              <h2 className="font-serif text-2xl sm:text-3xl font-light text-[#1b1c19]">
+                Verify Your Email
+              </h2>
+              <p className="text-xs sm:text-sm text-neutral-700 leading-relaxed font-light max-w-sm mx-auto pt-2">
+                We have sent you a verification email to <span className="font-semibold text-neutral-900 break-all underline decoration-amber-300 decoration-2">{verificationEmail}</span>. Please verify it and log in.
+              </p>
+            </div>
+
+            {/* Action Buttons: Required Login Button */}
+            <div className="space-y-3 pt-2">
+              <button
+                id="verification-login-btn"
+                type="button"
+                onClick={() => {
+                  setView('form');
+                  setTab('signin');
+                  setError(null);
+                  setSuccessMsg(null);
+                }}
+                className="w-full py-3.5 bg-[#000000] hover:bg-[#a83900] text-white text-xs uppercase tracking-[0.2em] font-medium transition-all flex items-center justify-center space-x-2 rounded-full cursor-pointer shadow-sm hover:shadow-md"
+              >
+                <span>Login</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+
+              {/* Resend Email Option */}
+              <button
+                id="resend-verification-btn"
+                type="button"
+                disabled={resendStatus === 'sending'}
+                onClick={handleResend}
+                className="w-full py-2.5 bg-white/80 hover:bg-white text-neutral-700 hover:text-black text-[11px] uppercase tracking-wider font-medium border border-neutral-300 transition-all rounded-full cursor-pointer disabled:opacity-50"
+              >
+                {resendStatus === 'sending' ? 'Sending Link...' : resendStatus === 'sent' ? 'Verification Email Resent!' : 'Resend Verification Email'}
+              </button>
+
+              {resendStatus === 'sent' && (
+                <p className="text-[11px] text-emerald-700 font-medium">
+                  A fresh verification email has been sent. Please check your inbox and spam folder.
+                </p>
+              )}
+            </div>
+
+            {/* Back link */}
+            <div className="pt-2 border-t border-neutral-200/70">
+              <button
+                type="button"
+                onClick={() => {
+                  setView('form');
+                  setError(null);
+                }}
+                className="text-[11px] text-neutral-500 hover:text-black cursor-pointer font-light"
+              >
+                Back to Sign In Form
+              </button>
+            </div>
+          </div>
+        ) : (
+          /* Direct Clean Sign In / Sign Up Form */
+          <div className="p-6 sm:p-8 space-y-5">
           
           {/* Header */}
           <div className="text-center space-y-1">
@@ -304,6 +424,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             </div>
 
           </div>
+        )}
 
       </div>
     </div>

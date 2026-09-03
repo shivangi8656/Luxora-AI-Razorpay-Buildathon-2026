@@ -51,6 +51,7 @@ interface CheckoutModalProps {
   onOrderCompleted?: () => void;
   onClearCart?: () => void;
   onOpenAuditTrail?: () => void;
+  onRequireAuth?: () => void;
 }
 
 export const CheckoutModal: React.FC<CheckoutModalProps> = ({
@@ -65,6 +66,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
   onOrderCompleted,
   onClearCart,
   onOpenAuditTrail,
+  onRequireAuth,
 }) => {
   const { user } = useAuth();
   const { 
@@ -631,8 +633,44 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
             </div>
           </div>
 
-          {/* TIMEOUT ERROR SCREEN (When 45s expires) */}
-          {isCheckoutTimedOut && step !== 'confirmed' ? (
+          {/* AUTHENTICATION REQUIRED VIEW (For unauthenticated buyers) */}
+          {!user && step !== 'confirmed' ? (
+            <div className="p-8 sm:p-14 text-center space-y-6 max-w-lg mx-auto">
+              <div className="w-16 h-16 rounded-full bg-[#f5ede5] border border-[#e4d3c4] text-[#a83900] flex items-center justify-center mx-auto shadow-sm">
+                <Lock className="w-8 h-8" />
+              </div>
+              <div className="space-y-1.5">
+                <span className="text-[10px] uppercase font-bold text-[#a83900] tracking-[0.25em] block">
+                  Private Client Verification
+                </span>
+                <h3 className="font-serif text-2xl sm:text-3xl font-light text-neutral-900">
+                  Please Sign In to Proceed
+                </h3>
+                <p className="text-xs text-neutral-600 leading-relaxed font-light max-w-md mx-auto pt-1">
+                  Private client authentication is required to reserve high-jewelry pieces and confirm your white-glove order.
+                </p>
+              </div>
+
+              <div className="pt-2 flex flex-col sm:flex-row justify-center gap-3">
+                <button
+                  onClick={() => {
+                    handleCloseModal();
+                    if (onRequireAuth) onRequireAuth();
+                  }}
+                  className="px-8 py-3.5 bg-black hover:bg-[#a83900] text-white text-xs uppercase tracking-widest font-semibold transition-all flex items-center justify-center space-x-2 rounded-full cursor-pointer shadow-md"
+                >
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>Sign In or Register</span>
+                </button>
+                <button
+                  onClick={handleCloseModal}
+                  className="px-6 py-3.5 bg-white hover:bg-neutral-100 border border-neutral-300 text-neutral-700 text-xs uppercase tracking-widest font-medium transition-colors rounded-full cursor-pointer"
+                >
+                  Return to Boutique
+                </button>
+              </div>
+            </div>
+          ) : isCheckoutTimedOut && step !== 'confirmed' ? (
             <div className="p-8 sm:p-12 text-center space-y-5 max-w-xl mx-auto">
               <div className="w-14 h-14 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center mx-auto">
                 <WifiOff className="w-7 h-7" />
