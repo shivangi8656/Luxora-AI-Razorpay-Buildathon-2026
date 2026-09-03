@@ -29,12 +29,15 @@ export const HeroEditorial: React.FC<HeroEditorialProps> = ({
   const springY = useSpring(mouseY, { damping: 28, stiffness: 90, mass: 0.5 });
 
   useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.defaultMuted = true;
+    video.muted = true;
+    video.playsInline = true;
+
     const playVideo = () => {
       if (videoRef.current) {
-        videoRef.current.defaultMuted = true;
-        videoRef.current.muted = true;
-        videoRef.current.setAttribute('muted', '');
-        videoRef.current.setAttribute('playsinline', '');
         const p = videoRef.current.play();
         if (p !== undefined) {
           p.catch(() => {
@@ -45,6 +48,13 @@ export const HeroEditorial: React.FC<HeroEditorialProps> = ({
     };
 
     playVideo();
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        playVideo();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     const handleUnlock = () => {
       playVideo();
@@ -58,6 +68,7 @@ export const HeroEditorial: React.FC<HeroEditorialProps> = ({
     window.addEventListener('scroll', handleUnlock, { passive: true });
 
     return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('click', handleUnlock);
       window.removeEventListener('touchstart', handleUnlock);
       window.removeEventListener('scroll', handleUnlock);
@@ -136,6 +147,8 @@ export const HeroEditorial: React.FC<HeroEditorialProps> = ({
               {!videoError ? (
                 <video
                   ref={videoRef}
+                  id="curated-intelligence-video"
+                  src="/videos/2nd_page.mp4"
                   autoPlay
                   muted
                   loop
@@ -148,15 +161,23 @@ export const HeroEditorial: React.FC<HeroEditorialProps> = ({
                       videoRef.current.play().catch(() => {});
                     }
                   }}
+                  onCanPlay={() => {
+                    if (videoRef.current && videoRef.current.paused) {
+                      videoRef.current.play().catch(() => {});
+                    }
+                  }}
                   onError={(e) => {
-                    console.warn('Hero editorial video error, falling back to poster', e);
-                    setVideoError(true);
+                    console.warn('Hero editorial video fallback notice:', e);
+                    if (videoRef.current?.error) {
+                      setVideoError(true);
+                    }
                   }}
                   className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
                 >
                   <source src="/videos/2nd_page.mp4" type="video/mp4" />
                   <source src="/videos/2nd%20page.mp4" type="video/mp4" />
-                  <source src="/videos/2nd page.mp4" type="video/mp4" />
+                  <source src="/videos/fashion_runway.mp4" type="video/mp4" />
+                  <source src="/videos/fashion_runway.mp4.mp4" type="video/mp4" />
                 </video>
               ) : (
                 <div 
