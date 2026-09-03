@@ -42,7 +42,8 @@ import {
   Trash2,
   RotateCcw,
   Filter,
-  FileText
+  FileText,
+  Menu
 } from 'lucide-react';
 import { useMerchant } from '../../context/MerchantContext';
 import { useAudit } from '../../context/AuditContext';
@@ -104,7 +105,7 @@ export const MerchantWorkspace: React.FC<MerchantWorkspaceProps> = ({
   const { user, handleSignOut } = useAuth();
 
   const [activeTab, setActiveTab] = useState<'growth' | 'catalog' | 'agent' | 'campaigns' | 'orders' | 'users'>(initialTab);
-
+  const [mobileTabMenuOpen, setMobileTabMenuOpen] = useState(false);
   
   // Navbar Profile Dropdown
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
@@ -119,6 +120,7 @@ export const MerchantWorkspace: React.FC<MerchantWorkspaceProps> = ({
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setIsProfileDropdownOpen(false);
+        setMobileTabMenuOpen(false);
         setIsNewCampaignOpen(false);
       }
     };
@@ -740,23 +742,23 @@ LUX-903,Pavé Diamond Arch Ear Cuff,accessories,Aurum Studio,335,18k Gold ear cu
     <div className="min-h-screen bg-[#fbf9f4] text-[#1b1c19] flex flex-col font-sans selection:bg-[#fc6018] selection:text-[#531800]">
       
       {/* Top Floating Glass Navigation Bar with LUXORA BUSINESS typography matching landing page */}
-      <nav className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 w-[94%] max-w-[1440px] rounded-full glass-nav shadow-sm hover:shadow-md transition-all duration-300 z-50 px-6 sm:px-8 py-3 flex justify-between items-center">
+      <nav className="fixed top-3 sm:top-4 md:top-6 left-1/2 -translate-x-1/2 w-[94%] max-w-[1440px] rounded-full glass-nav shadow-sm hover:shadow-md transition-all duration-300 z-50 px-4 sm:px-8 py-2.5 sm:py-3 flex justify-between items-center">
         
         {/* Brand Logo: LUXORA BUSINESS */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <button 
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="text-xl sm:text-2xl font-bold tracking-tight text-black hover:opacity-80 transition-opacity font-['Archivo_Narrow'] cursor-pointer flex items-center gap-2"
+            className="text-lg sm:text-2xl font-bold tracking-tight text-black hover:opacity-80 transition-opacity font-['Archivo_Narrow'] cursor-pointer flex items-center gap-1.5 sm:gap-2"
           >
             <span>LUXORA</span>
-            <span className="text-xs sm:text-sm font-semibold tracking-widest text-[#a83900] uppercase bg-[#f5ede5] px-2.5 py-0.5 rounded-full border border-[#e4d3c4]">
+            <span className="text-[10px] sm:text-xs font-semibold tracking-widest text-[#a83900] uppercase bg-[#f5ede5] px-2 py-0.5 rounded-full border border-[#e4d3c4]">
               BUSINESS
             </span>
           </button>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="flex items-center gap-4 sm:gap-7 text-[13px] sm:text-[14px] font-medium font-['Archivo_Narrow']">
+        {/* Desktop Navigation Tabs */}
+        <div className="hidden md:flex items-center gap-4 sm:gap-6 lg:gap-7 text-[13px] sm:text-[14px] font-medium font-['Archivo_Narrow']">
           <button
             onClick={() => setActiveTab('agent')}
             className={`pb-0.5 transition-all duration-150 flex items-center gap-1.5 cursor-pointer ${
@@ -778,7 +780,7 @@ LUX-903,Pavé Diamond Arch Ear Cuff,accessories,Aurum Studio,335,18k Gold ear cu
             }`}
           >
             <Users className="w-3.5 h-3.5 text-[#a83900]" />
-            <span>Patron Activity & Offers ({userActivities.length})</span>
+            <span>Patrons ({userActivities.length})</span>
           </button>
 
           <button
@@ -800,12 +802,12 @@ LUX-903,Pavé Diamond Arch Ear Cuff,accessories,Aurum Studio,335,18k Gold ear cu
                 : 'text-[#444748]/70 hover:text-black'
             }`}
           >
-            Live Orders ({orders.length})
+            Orders ({orders.length})
           </button>
 
           <button
             onClick={() => setActiveTab('catalog')}
-            className={`pb-0.5 transition-colors duration-200 hidden md:inline-block cursor-pointer ${
+            className={`pb-0.5 transition-colors duration-200 cursor-pointer ${
               activeTab === 'catalog'
                 ? 'text-black border-b-2 border-black font-bold'
                 : 'text-[#444748]/70 hover:text-black'
@@ -822,9 +824,87 @@ LUX-903,Pavé Diamond Arch Ear Cuff,accessories,Aurum Studio,335,18k Gold ear cu
                 : 'text-[#444748]/70 hover:text-black'
             }`}
           >
-            Growth Telemetry
+            Telemetry
           </button>
         </div>
+
+        {/* Mobile Active Tab Switcher Pill */}
+        <div className="flex md:hidden items-center">
+          <button
+            onClick={() => setMobileTabMenuOpen(prev => !prev)}
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-100 hover:bg-neutral-200 text-xs font-bold text-neutral-900 cursor-pointer transition-colors border border-black/5"
+          >
+            <span>
+              {activeTab === 'agent' && 'AI Bot'}
+              {activeTab === 'users' && 'Patrons'}
+              {activeTab === 'campaigns' && 'Campaigns'}
+              {activeTab === 'orders' && 'Orders'}
+              {activeTab === 'catalog' && 'Catalog'}
+              {activeTab === 'growth' && 'Growth'}
+            </span>
+            <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${mobileTabMenuOpen ? 'rotate-180' : ''}`} />
+          </button>
+        </div>
+
+        {/* Mobile Dropdown Menu for tabs */}
+        {mobileTabMenuOpen && (
+          <div className="absolute top-full left-0 right-0 mt-3 p-3 bg-white/95 backdrop-blur-2xl border border-black/10 rounded-2xl shadow-2xl flex flex-col gap-1 md:hidden z-50 font-['Archivo_Narrow']">
+            <button
+              onClick={() => { setActiveTab('agent'); setMobileTabMenuOpen(false); }}
+              className={`text-left font-semibold text-xs py-2 px-3 rounded-xl flex items-center justify-between cursor-pointer ${
+                activeTab === 'agent' ? 'bg-black text-white font-bold' : 'hover:bg-neutral-100 text-neutral-800'
+              }`}
+            >
+              <span>AI Bot & Strategy</span>
+              <Sparkles className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => { setActiveTab('users'); setMobileTabMenuOpen(false); }}
+              className={`text-left font-semibold text-xs py-2 px-3 rounded-xl flex items-center justify-between cursor-pointer ${
+                activeTab === 'users' ? 'bg-black text-white font-bold' : 'hover:bg-neutral-100 text-neutral-800'
+              }`}
+            >
+              <span>Patron Activity & Offers ({userActivities.length})</span>
+              <Users className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => { setActiveTab('campaigns'); setMobileTabMenuOpen(false); }}
+              className={`text-left font-semibold text-xs py-2 px-3 rounded-xl flex items-center justify-between cursor-pointer ${
+                activeTab === 'campaigns' ? 'bg-black text-white font-bold' : 'hover:bg-neutral-100 text-neutral-800'
+              }`}
+            >
+              <span>Growth Campaigns ({campaigns.length})</span>
+              <Megaphone className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => { setActiveTab('orders'); setMobileTabMenuOpen(false); }}
+              className={`text-left font-semibold text-xs py-2 px-3 rounded-xl flex items-center justify-between cursor-pointer ${
+                activeTab === 'orders' ? 'bg-black text-white font-bold' : 'hover:bg-neutral-100 text-neutral-800'
+              }`}
+            >
+              <span>Live Orders ({orders.length})</span>
+              <Package className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => { setActiveTab('catalog'); setMobileTabMenuOpen(false); }}
+              className={`text-left font-semibold text-xs py-2 px-3 rounded-xl flex items-center justify-between cursor-pointer ${
+                activeTab === 'catalog' ? 'bg-black text-white font-bold' : 'hover:bg-neutral-100 text-neutral-800'
+              }`}
+            >
+              <span>Product Catalog ({catalog.length})</span>
+              <Layers className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={() => { setActiveTab('growth'); setMobileTabMenuOpen(false); }}
+              className={`text-left font-semibold text-xs py-2 px-3 rounded-xl flex items-center justify-between cursor-pointer ${
+                activeTab === 'growth' ? 'bg-black text-white font-bold' : 'hover:bg-neutral-100 text-neutral-800'
+              }`}
+            >
+              <span>Growth Telemetry</span>
+              <TrendingUp className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
 
 
         {/* Trailing Icon Actions & Profile Dropdown */}

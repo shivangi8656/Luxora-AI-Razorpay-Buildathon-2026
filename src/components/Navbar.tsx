@@ -124,7 +124,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <nav className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 w-[94%] max-w-[1440px] rounded-full glass-nav shadow-sm hover:shadow-md transition-all duration-300 z-50 px-6 sm:px-8 py-3 flex justify-between items-center">
+    <nav className="fixed top-3 sm:top-4 md:top-6 left-1/2 -translate-x-1/2 w-[94%] max-w-[1440px] rounded-full glass-nav shadow-sm hover:shadow-md transition-all duration-300 z-50 px-4 sm:px-8 py-2.5 sm:py-3 flex justify-between items-center">
       
       {/* Brand Logo */}
       <div className="flex items-center gap-3">
@@ -378,45 +378,45 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Drawer Navigation */}
       {mobileMenuOpen && (
-        <div className="absolute top-full left-0 right-0 mt-3 p-4 bg-[#fbf9f4] border border-[#e4e2dd] rounded-2xl shadow-xl flex flex-col gap-3 md:hidden z-50 font-['Archivo_Narrow']">
+        <div className="absolute top-full left-0 right-0 mt-3 p-4 sm:p-5 bg-white/95 backdrop-blur-2xl border border-black/10 rounded-3xl shadow-2xl flex flex-col gap-2.5 md:hidden z-50 font-['Archivo_Narrow']">
           <button
             onClick={() => { setActiveTab('shop'); setMobileMenuOpen(false); }}
-            className="text-left font-semibold text-sm py-2 px-3 rounded-xl hover:bg-neutral-100 cursor-pointer"
+            className="text-left font-semibold text-sm py-2.5 px-3.5 rounded-xl hover:bg-neutral-100 cursor-pointer"
           >
             Catalog
           </button>
           <button
             onClick={() => { setActiveTab('lookbook'); setMobileMenuOpen(false); }}
-            className="text-left font-semibold text-sm py-2 px-3 rounded-xl hover:bg-neutral-100 cursor-pointer"
+            className="text-left font-semibold text-sm py-2.5 px-3.5 rounded-xl hover:bg-neutral-100 cursor-pointer"
           >
             Lookbook
           </button>
           <button
             onClick={() => { handleAtelierClick(); setMobileMenuOpen(false); }}
-            className="text-left font-semibold text-sm py-2 px-3 rounded-xl hover:bg-neutral-100 flex items-center gap-2 text-[#a83900] cursor-pointer"
+            className="text-left font-semibold text-sm py-2.5 px-3.5 rounded-xl hover:bg-neutral-100 flex items-center gap-2 text-[#a83900] cursor-pointer"
           >
             <Sparkles className="w-4 h-4" />
-            <span>AI Stylist</span>
+            <span>AI Personal Stylist</span>
           </button>
           {user && (
             <>
               <button
                 onClick={() => { handleOpenTab('orders'); setMobileMenuOpen(false); }}
-                className="text-left font-semibold text-sm py-2 px-3 rounded-xl hover:bg-neutral-100 flex items-center gap-2 text-black cursor-pointer"
+                className="text-left font-semibold text-sm py-2.5 px-3.5 rounded-xl hover:bg-neutral-100 flex items-center gap-2 text-black cursor-pointer"
               >
                 <Package className="w-4 h-4 text-[#a83900]" />
                 <span>My Orders & Invoices</span>
               </button>
               <button
                 onClick={() => { handleOpenTab('security'); setMobileMenuOpen(false); }}
-                className="text-left font-semibold text-sm py-2 px-3 rounded-xl hover:bg-neutral-100 flex items-center gap-2 text-black cursor-pointer"
+                className="text-left font-semibold text-sm py-2.5 px-3.5 rounded-xl hover:bg-neutral-100 flex items-center gap-2 text-black cursor-pointer"
               >
                 <ShieldCheck className="w-4 h-4" />
                 <span>Settings & Security Audit</span>
               </button>
               <button
                 onClick={onSignOutClick}
-                className="text-left font-bold text-xs py-2 px-3 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 uppercase tracking-wider flex items-center gap-2 cursor-pointer mt-1"
+                className="text-left font-bold text-xs py-2.5 px-3.5 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 uppercase tracking-wider flex items-center gap-2 cursor-pointer mt-1"
               >
                 <LogOut className="w-3.5 h-3.5" />
                 <span>Sign Out</span>
@@ -426,7 +426,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {!user && onSwitchToLanding && (
             <button
               onClick={() => { onSwitchToLanding(); setMobileMenuOpen(false); }}
-              className="text-left font-semibold text-sm py-2 px-3 rounded-xl hover:bg-neutral-100 cursor-pointer"
+              className="text-left font-semibold text-sm py-2.5 px-3.5 rounded-xl hover:bg-neutral-100 cursor-pointer text-neutral-600 hover:text-black border-t border-neutral-100 pt-3 mt-1"
             >
               Public Landing Page
             </button>

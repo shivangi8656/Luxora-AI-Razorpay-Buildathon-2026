@@ -20,7 +20,9 @@ import {
   Eye,
   RefreshCw,
   Clock,
-  Sparkle
+  Sparkle,
+  Menu,
+  X
 } from 'lucide-react';
 import { motion, AnimatePresence, useMotionValue, useSpring } from 'motion/react';
 import { useAuth } from '../context/AuthContext';
@@ -63,6 +65,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
   const [scrollYOffset, setScrollYOffset] = useState(0);
   const [videoError, setVideoError] = useState(false);
   const [businessVideoError, setBusinessVideoError] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   
   // Central Mode Switch: 'buyer' | 'merchant'
   const [landingMode, setLandingMode] = useState<'buyer' | 'merchant'>('buyer');
@@ -223,16 +226,21 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
     <div className="font-['Archivo_Narrow'] min-h-screen bg-[#fbf9f4] text-[#1b1c19] selection:bg-[#fc6018] selection:text-[#531800] relative overflow-x-hidden antialiased">
       
       {/* 1. TOP NAVBAR WITH DYNAMIC BUYER/MERCHANT TOGGLE */}
-      <header className="fixed top-3.5 sm:top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-[1440px] rounded-full glass-nav overflow-hidden transition-all duration-300 z-50 px-5 sm:px-8 py-2.5 shadow-xs">
-        <div className="relative flex flex-col md:flex-row justify-between items-center w-full gap-3 md:gap-0">
+      <header className="fixed top-3 sm:top-4 left-1/2 -translate-x-1/2 w-[94%] max-w-[1440px] rounded-full glass-nav transition-all duration-300 z-50 px-4 sm:px-8 py-2 sm:py-2.5 shadow-sm">
+        <div className="relative flex items-center justify-between w-full gap-2 sm:gap-4">
           
           {/* Brand Title */}
-          <div className="flex items-center">
+          <div className="flex items-center shrink-0">
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="text-xl sm:text-2xl font-bold tracking-tighter text-black hover:opacity-80 transition-opacity font-['Archivo_Narrow'] cursor-pointer flex items-center gap-2"
+              className="text-lg sm:text-2xl font-bold tracking-tighter text-black hover:opacity-80 transition-opacity font-['Archivo_Narrow'] cursor-pointer flex items-center gap-1.5"
             >
-              <span>{landingMode === 'buyer' ? 'LUXORA' : 'LUXORA Business'}</span>
+              <span>LUXORA</span>
+              {landingMode === 'merchant' && (
+                <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider bg-black text-white px-2 py-0.5 rounded-full">
+                  Business
+                </span>
+              )}
             </button>
           </div>
 
@@ -249,7 +257,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
                 handleToggleMode();
               }
             }}
-            className="relative z-10 w-48 h-10 rounded-full p-1 flex items-center cursor-pointer group outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 select-none justify-between active:scale-[0.985] transition-transform duration-150"
+            className="relative z-10 w-36 sm:w-44 h-8 sm:h-9.5 rounded-full p-0.5 sm:p-1 flex items-center cursor-pointer group outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 select-none justify-between active:scale-[0.985] transition-transform duration-150 shrink-0"
             style={{
               background: 'linear-gradient(180deg, #eae8e1 0%, #dedbd2 100%)',
               boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.08), inset 0 -1px 2px rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.04)',
@@ -260,7 +268,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             {/* Sliding thumb - Hardware-accelerated smooth spring transition */}
             <motion.div
               id="hdr-toggle-thumb"
-              className="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] rounded-full z-0 pointer-events-none"
+              className="absolute top-0.5 sm:top-1 bottom-0.5 sm:bottom-1 left-0.5 sm:left-1 w-[calc(50%-2px)] sm:w-[calc(50%-4px)] rounded-full z-0 pointer-events-none"
               animate={{
                 x: displayMode === 'merchant' ? '100%' : '0%',
               }}
@@ -289,7 +297,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             >
               <span
                 id="hdr-toggle-text-buyer"
-                className={`w-full text-center flex items-center justify-center text-xs tracking-wide transition-colors duration-200 select-none font-['Archivo_Narrow'] leading-none ${
+                className={`w-full text-center flex items-center justify-center text-[11px] sm:text-xs tracking-wide transition-colors duration-200 select-none font-['Archivo_Narrow'] leading-none ${
                   displayMode === 'buyer'
                     ? 'font-bold text-white'
                     : 'font-medium text-neutral-600 group-hover:text-neutral-900'
@@ -310,7 +318,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             >
               <span
                 id="hdr-business-label"
-                className={`w-full text-center flex items-center justify-center text-xs tracking-wide transition-colors duration-200 select-none font-['Archivo_Narrow'] leading-none ${
+                className={`w-full text-center flex items-center justify-center text-[11px] sm:text-xs tracking-wide transition-colors duration-200 select-none font-['Archivo_Narrow'] leading-none ${
                   displayMode === 'merchant'
                     ? 'font-bold text-white'
                     : 'font-medium text-neutral-600 group-hover:text-neutral-900'
@@ -321,7 +329,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             </div>
           </div>
 
-          {/* Dynamic Navigation Options */}
+          {/* Desktop Navigation Links */}
           {landingMode === 'buyer' ? (
             /* Buyer Top Navigation */
             <div className="hidden md:flex items-center gap-6">
@@ -434,7 +442,128 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             </div>
           )}
 
+          {/* Mobile Menu Toggle Button */}
+          <div className="flex md:hidden items-center">
+            <button
+              onClick={() => setMobileNavOpen((prev) => !prev)}
+              className="p-1.5 rounded-full text-neutral-800 hover:bg-neutral-100 hover:text-black transition-colors cursor-pointer"
+              aria-label="Toggle Navigation Menu"
+            >
+              {mobileNavOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
+
         </div>
+
+        {/* Mobile Dropdown Navigation Drawer */}
+        <AnimatePresence>
+          {mobileNavOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -10, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.98 }}
+              transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute top-full left-0 right-0 mt-3 p-4 sm:p-5 bg-white/95 backdrop-blur-2xl border border-black/10 rounded-3xl shadow-2xl flex flex-col gap-2.5 font-['Archivo_Narrow'] z-50"
+            >
+              {landingMode === 'buyer' ? (
+                <>
+                  <button
+                    onClick={() => { onSelectBuyerMode(); setMobileNavOpen(false); }}
+                    className="w-full text-left py-2.5 px-3.5 rounded-xl hover:bg-neutral-100 font-semibold text-sm flex items-center justify-between text-neutral-900 cursor-pointer"
+                  >
+                    <span>Explore Collection</span>
+                    <ArrowRight className="w-4 h-4 text-neutral-400" />
+                  </button>
+                  <button
+                    onClick={() => { scrollToElement('buyer-how-it-works'); setMobileNavOpen(false); }}
+                    className="w-full text-left py-2.5 px-3.5 rounded-xl hover:bg-neutral-100 font-semibold text-sm text-neutral-700 cursor-pointer"
+                  >
+                    How It Works
+                  </button>
+                  <button
+                    onClick={() => {
+                      setMobileNavOpen(false);
+                      if (user) onOpenAtelier();
+                      else onOpenAuth('buyer');
+                    }}
+                    className="w-full text-left py-2.5 px-3.5 rounded-xl hover:bg-neutral-100 font-semibold text-sm flex items-center gap-2 text-[#a83900] cursor-pointer"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    <span>AI Personal Stylist</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setMobileNavOpen(false);
+                      if (user) onOpenAuditTrail();
+                      else onOpenAuth('buyer');
+                    }}
+                    className="w-full text-left py-2.5 px-3.5 rounded-xl hover:bg-neutral-100 font-semibold text-sm text-neutral-700 cursor-pointer"
+                  >
+                    Orders & Shipments
+                  </button>
+                  <div className="pt-2 border-t border-neutral-100 flex flex-col gap-2">
+                    <button
+                      onClick={() => { handleBuyerSignIn(); setMobileNavOpen(false); }}
+                      className="w-full py-2.5 px-4 rounded-xl border border-neutral-200 text-sm font-semibold text-neutral-900 text-center hover:bg-neutral-50 cursor-pointer"
+                    >
+                      {user && user.role === 'buyer' ? (user.displayName || 'My Account') : 'Sign In'}
+                    </button>
+                    <button
+                      onClick={() => { onSelectBuyerMode(); setMobileNavOpen(false); }}
+                      className="w-full py-3 px-4 rounded-xl bg-black text-white text-sm font-bold text-center shadow-sm hover:bg-neutral-800 cursor-pointer flex items-center justify-center gap-2"
+                    >
+                      <span>Start Shopping</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => { scrollToElement('merchant-benefits'); setMobileNavOpen(false); }}
+                    className="w-full text-left py-2.5 px-3.5 rounded-xl hover:bg-neutral-100 font-semibold text-sm text-neutral-700 cursor-pointer"
+                  >
+                    Product & Capabilities
+                  </button>
+                  <button
+                    onClick={() => { scrollToElement('merchant-how-it-works'); setMobileNavOpen(false); }}
+                    className="w-full text-left py-2.5 px-3.5 rounded-xl hover:bg-neutral-100 font-semibold text-sm text-neutral-700 cursor-pointer"
+                  >
+                    Merchant Flow
+                  </button>
+                  <button
+                    onClick={() => { scrollToElement('merchant-ai-agent'); setMobileNavOpen(false); }}
+                    className="w-full text-left py-2.5 px-3.5 rounded-xl hover:bg-neutral-100 font-semibold text-sm flex items-center gap-2 text-[#a83900] cursor-pointer"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    <span>AI Sales Agent</span>
+                  </button>
+                  <button
+                    onClick={() => { scrollToElement('merchant-analytics'); setMobileNavOpen(false); }}
+                    className="w-full text-left py-2.5 px-3.5 rounded-xl hover:bg-neutral-100 font-semibold text-sm text-neutral-700 cursor-pointer"
+                  >
+                    Orders & Analytics
+                  </button>
+                  <div className="pt-2 border-t border-neutral-100 flex flex-col gap-2">
+                    <button
+                      onClick={() => { handleMerchantSignIn(); setMobileNavOpen(false); }}
+                      className="w-full py-2.5 px-4 rounded-xl border border-neutral-200 text-sm font-semibold text-neutral-900 text-center hover:bg-neutral-50 cursor-pointer"
+                    >
+                      {user && user.role === 'merchant' ? (user.displayName || 'Business Portal') : 'Merchant Sign In'}
+                    </button>
+                    <button
+                      onClick={() => { handleMerchantAction(); setMobileNavOpen(false); }}
+                      className="w-full py-3 px-4 rounded-xl bg-black text-white text-sm font-bold text-center shadow-sm hover:bg-neutral-800 cursor-pointer flex items-center justify-center gap-2"
+                    >
+                      <span>Launch Portal</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* 2. DEDICATED BUYER EXPERIENCE */}
@@ -449,7 +578,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className="min-h-[560px] lg:min-h-[640px] flex items-center relative pt-20 sm:pt-24 lg:pt-24 pb-12 sm:pb-16 px-6 sm:px-12 md:px-20 z-10 overflow-hidden bg-[#faf8f5]"
+            className="min-h-[560px] lg:min-h-[640px] flex items-center relative pt-28 sm:pt-32 lg:pt-36 pb-12 sm:pb-16 px-6 sm:px-12 md:px-20 z-10 overflow-hidden bg-[#faf8f5]"
           >
             {/* Background Full-Bleed Video Canvas on Right with Seamless Fade to Left */}
             <div className="absolute right-0 top-0 bottom-0 w-full md:w-[58%] lg:w-[54%] xl:w-[50%] h-full z-0 overflow-hidden pointer-events-none bg-neutral-950">
@@ -789,7 +918,7 @@ export const LandingHero: React.FC<LandingHeroProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className="min-h-[560px] lg:min-h-[640px] flex items-center relative pt-20 sm:pt-24 lg:pt-24 pb-12 sm:pb-16 px-6 sm:px-12 md:px-20 z-10 overflow-hidden bg-[#fbf9f4]"
+            className="min-h-[560px] lg:min-h-[640px] flex items-center relative pt-28 sm:pt-32 lg:pt-36 pb-12 sm:pb-16 px-6 sm:px-12 md:px-20 z-10 overflow-hidden bg-[#fbf9f4]"
           >
             {/* Background Full-Bleed Video Canvas on Right with Seamless Fade to Left */}
             <div className="absolute right-0 top-0 bottom-0 w-full md:w-[68%] lg:w-[62%] xl:w-[58%] h-full z-0 overflow-hidden pointer-events-none bg-[#fbf9f4]">
