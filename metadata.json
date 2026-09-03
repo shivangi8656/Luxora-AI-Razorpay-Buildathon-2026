@@ -1,0 +1,7 @@
+{
+  "name": "LUXORA",
+  "description": "AI-powered women's luxury fashion commerce platform and virtual atelier.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
