@@ -190,51 +190,6 @@ LUXORA/
 └── ...
 ```
 
-## Getting Started
-
-### 1. Clone the repository
-
-``` bash
-git clone <YOUR_GITHUB_REPOSITORY_URL>
-cd LUXORA
-```
-
-### 2. Install dependencies
-
-``` bash
-npm install
-```
-
-### 3. Configure Firebase
-
-Create/configure your Firebase project and add the required Firebase
-configuration through environment variables.
-
-**Never commit private credentials, API secrets, or payment secrets to
-GitHub.**
-
-### 4. Run locally
-
-``` bash
-npm run dev
-```
-
-## Environment Variables
-
-Example:
-
-``` env
-VITE_FIREBASE_API_KEY=
-VITE_FIREBASE_AUTH_DOMAIN=
-VITE_FIREBASE_PROJECT_ID=
-VITE_FIREBASE_STORAGE_BUCKET=
-VITE_FIREBASE_MESSAGING_SENDER_ID=
-VITE_FIREBASE_APP_ID=
-```
-
-Keep sensitive server-side credentials, especially payment secrets,
-outside the frontend.
-
 ## Hackathon Focus
 
 **For Buyers:**\
